@@ -11,6 +11,7 @@ import {
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import LoginStack from "./Login";
 import styles from "./styles";
@@ -30,10 +31,14 @@ const App = () => {
     setIsLoggedIn(true);
   };
 
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+  };
+
   return (
     <NavigationContainer>
       {isLoggedIn ? (
-        <HomeTabs onLogout={() => setIsLoggedIn(false)} username={username} />
+        <HomeTabs onLogout={handleLogout} username={username} />
       ) : (
         <LoginStack onLogin={handleLogin} />
       )}
@@ -43,12 +48,13 @@ const App = () => {
 
 const HomeTabs = ({ onLogout, username }) => {
   return (
-    <Tab.Navigator initialRouteName="Welcome">
+    <Tab.Navigator initialRouteName="Home">
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={HomeStackScreen}
         initialParams={{ username: username }}
         options={{
+          headerShown: false,
           tabBarLabel: "Home",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="ios-home" color={color} size={size} />
@@ -68,22 +74,22 @@ const HomeTabs = ({ onLogout, username }) => {
 
       <Tab.Screen
         name="Profile"
-        component={ProfilePage}
-        initialParams={{ onLogout: onLogout, username: username }}
         options={{
           tabBarLabel: "Profile",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="ios-person" color={color} size={size} />
           ),
         }}
-      ></Tab.Screen>
+      >
+        {(props) => (
+          <ProfilePage {...props} username={username} onLogout={onLogout} />
+        )}
+      </Tab.Screen>
     </Tab.Navigator>
   );
 };
 
-const ProfilePage = ({ route }) => {
-  const { onLogout, username } = route.params;
-
+const ProfilePage = ({ username, onLogout }) => {
   return (
     <View style={styles.container}>
       <Image source={require("./assets/favicon.png")} />
@@ -97,8 +103,29 @@ const ProfilePage = ({ route }) => {
   );
 };
 
-const HomeScreen = ({ route }) => {
+const HomeStack = createStackNavigator();
+const HomeStackScreen = ({ username }) => {
+  return (
+    // hide header
+    <HomeStack.Navigator initialRouteName="HomeStack ">
+      <HomeStack.Screen
+        name="HomeStack"
+        component={HomeScreen}
+        initialParams={{ username: username }}
+        options={{ headerTitle: "Home" }}
+      />
+      <HomeStack.Screen name="CreateEvent" component={CreateEvent} />
+    </HomeStack.Navigator>
+  );
+};
+
+const HomeScreen = ({ route, navigation }) => {
   const { username } = route.params;
+
+  const handleCreateEvent = () => {
+    navigation.navigate("CreateEvent");
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.welcome}> Welcome </Text>
@@ -107,8 +134,16 @@ const HomeScreen = ({ route }) => {
       <Text style={styles.welcome}> {username} </Text>
       <View style={styles.container}>
         <AppButton title="Find Events" />
-        <AppButton title="Create Event" />
+        <AppButton title="Create Event" onPress={handleCreateEvent} />
       </View>
+    </View>
+  );
+};
+
+const CreateEvent = () => {
+  return (
+    <View style={styles.container}>
+      <Text> Create Event </Text>
     </View>
   );
 };
