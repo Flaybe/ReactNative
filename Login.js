@@ -1,67 +1,67 @@
 import React from "react";
 import {
-  SafeAreaView,
-  StyleSheet,
   Text,
   TextInput,
   View,
-  Button,
   Image,
   KeyboardAvoidingView,
 } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import styles from "./styles";
+import AppButton from "./AppButton.js";
 import axios from "axios";
 
 const Stack = createStackNavigator();
 
-const LoginPage = (onLogin) => {
+const LoginStack = ({ onLogin }) => {
+  console.log("onLogin:", onLogin);
   return (
-    <NavigationContainer independent={true}>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={LoginView} />
-        <Stack.Screen name="Register" component={RegisterView} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Stack.Navigator>
+      <Stack.Screen name="Login">
+        {(props) => <LoginView {...props} onLogin={onLogin} />}
+      </Stack.Screen>
+      <Stack.Screen name="Register" component={RegisterView} />
+    </Stack.Navigator>
   );
 };
 
-const LoginView = ({ navigation }) => {
+const LoginView = ({ onLogin, navigation }) => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
 
   const handleLogin = () => {
     axios
-      .get("https://eventhub80.azurewebsites.net/messages", {
-        username: username,
+      .post("https://eventhub80.azurewebsites.net/user", {
+        name: username,
         password: password,
       })
       .then((response) => {
         if (response.status === 200) {
           // run onLogin function
           alert("Login successful");
-          params.login();
+          onLogin(username);
         } else {
           alert("Login failed");
+          onLogin(username);
         }
       })
       .catch((error) => {
+        onLogin(username);
         console.log(error);
       });
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="padding">
+    <View style={styles.container}>
+      <Text style={styles.welcome}>Welcome to EventHub</Text>
       <Image source={require("./assets/favicon.png")} />
-      <View style={styles.content}>
+      <KeyboardAvoidingView style={styles.container} behavior="position">
         <TextInput
           style={styles.input}
           placeholder=" Username"
           value={username}
           onChangeText={setUsername}
         />
-
         <TextInput
           secureTextEntry={true}
           style={styles.input}
@@ -69,15 +69,17 @@ const LoginView = ({ navigation }) => {
           value={password}
           onChangeText={setPassword}
         />
+      </KeyboardAvoidingView>
 
-        <Button onPress={handleLogin} title="Login" />
-        <Text style={styles.hint}>Don't have an account?</Text>
-        <Button
-          onPress={() => navigation.navigate("Register")}
-          title="Register"
-        />
-      </View>
-    </KeyboardAvoidingView>
+      <AppButton onPress={handleLogin} title="Login" />
+      <View style={{ height: 50 }} />
+      <Text style={styles.hint}>Don't have an account?</Text>
+      <AppButton
+        onPress={() => navigation.navigate("Register")}
+        title="Create Account"
+      />
+      <View style={{ height: 100 }} />
+    </View>
   );
 };
 
@@ -136,10 +138,10 @@ const RegisterView = ({ navigation }) => {
           onChangeText={setPassword2}
         />
 
-        <Button onPress={handleRegister} title="Register" />
+        <AppButton onPress={handleRegister} title="Register" />
       </View>
     </KeyboardAvoidingView>
   );
 };
 
-export default LoginPage;
+export default LoginStack;

@@ -28,13 +28,40 @@ const styles = StyleSheet.create({
     height: 40,
     width: 200,
     borderColor: "gray",
-    borderWidth: 2,
     margin: 10,
+    paddingLeft: 10,
+    borderRadius: 10,
+    borderWidth: 1,
   },
   hint: {
     color: "gray",
     fontSize: 12,
-    paddingTop: 200,
+  },
+  welcome: {
+    fontSize: 20,
+    textAlign: "center",
+    textAlignVertical: "center",
+  },
+  appButtonText: {
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase",
+  },
+  appButtonContainer: {
+    elevation: 8,
+    backgroundColor: "#2e4494",
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    margin: 5,
+  },
+  info: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "left",
+    justifyContent: "center",
   },
 });
 
