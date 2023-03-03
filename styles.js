@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
@@ -33,6 +33,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
   },
+  description: {
+    height: 100,
+    width: 200,
+    borderColor: "gray",
+    margin: 10,
+    paddingLeft: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+  },
   hint: {
     color: "gray",
     fontSize: 12,
@@ -58,6 +67,33 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   info: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "left",
+    justifyContent: "center",
+  },
+  image: {
+    borderWidth: 3,
+    borderColor: "black",
+  },
+  eventItem: {
+    backgroundColor: "#fff",
+    width: Dimensions.get("window").width - 20,
+    padding: 10,
+    marginVertical: 8,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "black",
+  },
+  eventTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  eventDescription: {
+    fontSize: 10,
+    marginTop: 5,
+  },
+  listContainer: {
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "left",

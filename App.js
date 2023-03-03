@@ -16,6 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 import LoginStack from "./Login";
 import styles from "./styles";
 import AppButton from "./AppButton.js";
+import HomeStackScreen from "./HomeStack.js";
 
 const Stack = createStackNavigator();
 
@@ -99,51 +100,6 @@ const ProfilePage = ({ username, onLogout }) => {
       <View style={styles.container}>
         <AppButton title="Logout" onPress={onLogout} />
       </View>
-    </View>
-  );
-};
-
-const HomeStack = createStackNavigator();
-const HomeStackScreen = ({ username }) => {
-  return (
-    // hide header
-    <HomeStack.Navigator initialRouteName="HomeStack ">
-      <HomeStack.Screen
-        name="HomeStack"
-        component={HomeScreen}
-        initialParams={{ username: username }}
-        options={{ headerTitle: "Home" }}
-      />
-      <HomeStack.Screen name="CreateEvent" component={CreateEvent} />
-    </HomeStack.Navigator>
-  );
-};
-
-const HomeScreen = ({ route, navigation }) => {
-  const { username } = route.params;
-
-  const handleCreateEvent = () => {
-    navigation.navigate("CreateEvent");
-  };
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.welcome}> Welcome </Text>
-      <Text style={styles.welcome}> to </Text>
-      <Text style={styles.welcome}> EventHub </Text>
-      <Text style={styles.welcome}> {username} </Text>
-      <View style={styles.container}>
-        <AppButton title="Find Events" />
-        <AppButton title="Create Event" onPress={handleCreateEvent} />
-      </View>
-    </View>
-  );
-};
-
-const CreateEvent = () => {
-  return (
-    <View style={styles.container}>
-      <Text> Create Event </Text>
     </View>
   );
 };
